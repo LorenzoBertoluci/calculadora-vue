@@ -1,50 +1,94 @@
 <script setup>
   import { ref } from 'vue';
 
-const currentInput = ref('');
+const valorAtual = ref('');
 const operacao = ref('');
-const resultado = ref('');
+const resultado = ref(0);
+
+
+
+const numero1 = ref(0);
+const numero2 = ref(0);
+const operacao1 = ref('+');
+const results = ref(0);
+
+function calcular1() {
+    switch (operacao1.value) {
+        case '+':
+            results.value = numero1.value + numero2.value;
+            break;
+        case '-':
+            results.value = numero1.value - numero2.value;
+            break;
+        case '*':
+            results.value = numero1.value * numero2.value;
+            break;
+        case '/':
+            results.value = numero1.value / numero2.value;
+            break;
+        default:
+            results.value = 0;
+    }
+}
+
+
 
 function adicionarNumero(numero) {
     if (operacao.value === '=') {
-      currentInput.value = '';
+      valorAtual.value = '';
       operacao.value = '';
     }
-    currentInput.value += numero;
+    valorAtual.value += numero;
     atualizarDisplay();
   }
 
   function adicionarOperacao(op) {
     operacao.value = op;
-    currentInput.value += op;
+    valorAtual.value += op;
     atualizarDisplay();
   }
 
   function calcular() {
-    if (currentInput.value !== '' && operacao.value !== '') {
-      resultado.value = eval(currentInput.value);
-      currentInput.value = resultado.value;
+    if (valorAtual.value !== '' && operacao.value !== '') {
+      resultado.value = eval(valorAtual.value);
+      valorAtual.value = resultado.value;
       operacao.value = '=';
       atualizarDisplay();
     }
   }
 
   function limpar() {
-    currentInput.value = '';
+    valorAtual.value = '';
     operacao.value = '';
     resultado.value = '';
     atualizarDisplay();
   }
 
   function atualizarDisplay() {
-    resultado.value = operacao.value === '=' ? resultado.value : currentInput.value || '0';
+    resultado.value = operacao.value === '=' ? resultado.value : valorAtual.value || '0';
   }
 
 </script>
 
 <template>
+
+<div id="app1">
+    <h1>Calculadora VueJS simples</h1>
+    <div class="calculator">
+      <input v-model="numero1" type="number" @click="calcular1" />
+      <select v-model="operacao1" @change="calcular1">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">x</option>
+        <option value="/">/</option>
+      </select>
+      <input v-model="numero2" type="number"  @click="calcular1"/>
+      <div class="results">Resultado: {{ results }}</div>
+    </div>
+  </div>
+
   <div id="app">
-    <h1>Calculadora VueJS</h1>
+    <h1>Calculadora VueJS completa</h1>
     <div class="calculator">
       <div class="display">{{ resultado }}</div>
       <div class="buttons">
@@ -67,15 +111,27 @@ function adicionarNumero(numero) {
       </div>
     </div>
   </div>
+
+
 </template>
 
 <style scoped>
+
+#app1 {
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
 #app {
   font-family: 'Arial', sans-serif;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
+
+
 
 .calculator {
   display: flex;
@@ -116,5 +172,18 @@ button {
 
 button:hover {
   background-color: #2980b9;
+  
+}
+
+input,
+select {
+  margin: 10px 0;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.results {
+  margin-top: 20px;
+  font-size: 18px;
 }
 </style>
